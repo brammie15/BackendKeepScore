@@ -1,5 +1,7 @@
 const Router = require('koa-router');
 const installHealthRouter = require('./_health');
+const installKlasRouter = require('./_klas');
+const installLeerlingRouter = require('./_leerling');
 
 const sendHello = async (ctx) => {
     ctx.body = 'Welcome to the API';
@@ -12,6 +14,8 @@ module.exports = function installRest(app) {
 
     router.get('/', sendHello);
     installHealthRouter(router);
+    installKlasRouter(router);
+    installLeerlingRouter(router);
 
     app.use(router.routes()).use(router.allowedMethods());
 }

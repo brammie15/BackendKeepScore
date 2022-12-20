@@ -7,6 +7,7 @@ const {
     getLogger,
     initializeLogger
 } = require('./core/logging')
+const {initializeData} = require("../data");
 const main = async () => {
     const NODE_ENV ='NODE_ENV';
     const LOG_LEVEL = config.get('log.level');
@@ -19,6 +20,8 @@ const main = async () => {
             NODE_ENV
         }
     });
+
+    await initializeData();
 
 
     const app = new Koa();

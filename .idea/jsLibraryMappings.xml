@@ -3,6 +3,7 @@
   <component name="JavaScriptLibraryMappings">
     <file url="file://$PROJECT_DIR$" libraries="{desplypere/node_modules}" />
     <file url="file://$PROJECT_DIR$/src" libraries="{desplypere/node_modules}" />
+    <includedPredefinedLibrary name="Node.js Core" />
     <excludedPredefinedLibrary name="HTML" />
   </component>
 </project>
