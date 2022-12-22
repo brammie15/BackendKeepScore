@@ -56,3 +56,10 @@ module.exports.initializeLogger = ({
 
     logger.info(` Logger initialized with minimum log level ${level}`);
 };
+
+
+module.exports.debugLog = (message, meta = {}) => {
+    if(!this.logger) this.logger = this.getLogger();
+    this.logger.debug(message, meta);
+}
+

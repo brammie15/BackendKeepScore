@@ -1,10 +1,7 @@
-const {getLogger} = require('../core/logging');
+const {getLogger, debugLog} = require('../core/logging');
 const klasRepository = require('../repository/klas');
+const {createError} = require("../core/error");
 
-const debugLog = (message, meta = {}) => {
-    if(!this.logger) this.logger = getLogger();
-    this.logger.debug(message, meta);
-}
 
 const getAll = async () => {
     debugLog('Getting all klasses');
@@ -13,6 +10,11 @@ const getAll = async () => {
         items: klassen,
         count: klassen.length
     }
+}
+
+const getLeerlingenByKlasId = async (id) => {
+    debugLog('Getting leerlingen by klas id', {id});
+    return await klasRepository.getLeerlingenByKlasId(id);
 }
 
 const getById = async (id) => {
@@ -24,23 +26,21 @@ const create = async (klas) => {
     debugLog('Creating klas', {klas});
     let klasses = await klasRepository.getAll();
     if(klasses.find(k => k.naam === klas.naam)){
-        debugLog('Klas already exists', {klas});
-        return {
-            error: 'Klas already exists'
-        };
+        return createError('Klas already exists', {klas});
     }
     if(!klas.naam || klas.naam.length === 0){
-        debugLog('Klas name is empty', {klas});
-        return {
-            error: 'Klas name is empty'
-        };
+        return createError('Klas name is empty', {klas});
     }
-    await klasRepository.create(klas);
-    return klas;
+    let newKlas = await klasRepository.create(klas);
+    return {
+        ...klas,
+        id: newKlas
+    }
 }
 
 module.exports = {
     getAll,
     getById,
     create,
+    getLeerlingenByKlasId,
 };

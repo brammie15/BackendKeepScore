@@ -1,6 +1,7 @@
 const {getLogger} = require('../core/logging');
 const leerlingRepository = require('../repository/leerling');
 const klasRepository = require("./klas");
+const {createError} = require("../core/error");
 
 const debugLog = (message, meta = {}) => {
     if(!this.logger) this.logger = getLogger();
@@ -25,29 +26,17 @@ const create = async (leerling) => {
     debugLog('Creating leerling', {leerling});
     let leerlingen = await leerlingRepository.getAll();
     if(leerlingen.find(l => l.naam === leerling.naam)){
-        debugLog('Leerling already exists', {leerling});
-        return {
-            error: 'Leerling already exists'
-        };
+        return createError('Leerling already exists', {leerling});
     }
     if(!leerling.naam || leerling.naam.length === 0){
-        debugLog('Leerling name is empty', {leerling});
-        return {
-            error: 'Leerling name is empty'
-        };
+        return createError('Leerling name is empty', {leerling});
     }
     if(!leerling.klas_id || leerling.klas_id.length === 0){
-        debugLog('Leerling klasId is empty', {leerling});
-        return {
-            error: 'klas_id is empty'
-        };
+        return createError('Leerling klas_id is empty', {leerling});
     }
     let klassen  = await klasRepository.getAll();
     if(!klassen.items.find(k => k.id === leerling.klas_id)){
-        debugLog('Klas does not exist', {leerling});
-        return {
-            error: 'Klas does not exist'
-        };
+        return createError('Leerling klas_id does not exist', {leerling});
     }
     await leerlingRepository.create(leerling);
     return leerling;

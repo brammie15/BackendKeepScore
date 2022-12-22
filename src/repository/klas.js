@@ -2,7 +2,11 @@ const {getKnex, tables} = require('../../data');
 const {klas} = require('../../data');
 
 const getAll = async () => {
-    return getKnex()(tables.klas).select('*').orderBy('naam', 'asc');
+    return getKnex()(tables.klas).select('*').orderBy(klas.naam, 'asc');
+}
+
+const getLeerlingenByKlasId = async (id) => {
+    return getKnex()(tables.leerling).select('*').where('klas_id', id);
 }
 
 const create = async (klas) => {
@@ -25,4 +29,5 @@ module.exports = {
     create,
     getById,
     updateById,
+    getLeerlingenByKlasId,
 };
