@@ -3,11 +3,17 @@ const cors = require('@koa/cors');
 const config = require('config');
 const bodyParser = require('koa-bodyparser');
 const installRest = require('./rest/index');
+const fs = require('fs');
+const path = require('path');
+const https = require('https');
 const {
     getLogger,
     initializeLogger
 } = require('./core/logging')
 const {initializeData} = require("../data");
+
+const isDevelopment = true;
+
 const main = async () => {
     const NODE_ENV ='NODE_ENV';
     const LOG_LEVEL = config.get('log.level');
@@ -20,7 +26,18 @@ const main = async () => {
             NODE_ENV
         }
     });
-
+    if(!isDevelopment){
+        const serverConfig = {
+            domain: 'brammie15.dev', // your domain
+            https: {
+                port: 5000, // any port that is open and not already used on your server
+                options: {
+                    key: fs.readFileSync(path.resolve(process.cwd(), 'certs/privkey.pem'), 'utf8').toString(),
+                    cert: fs.readFileSync(path.resolve(process.cwd(), 'certs/fullchain.pem'), 'utf8').toString(),
+                },
+            },
+        };
+    }
     await initializeData();
 
 
@@ -40,9 +57,18 @@ const main = async () => {
 
     installRest(app);
 
-    app.listen(3000);
+    if(isDevelopment){
+        app.listen(5000);
+    }else{
+        const httpServer = https.createServer(serverConfig.https.options, app.callback()).listen(config.https.port);
+        httpServer.listen(serverConfig.https.port, () => {
+            logger.info(`HTTPS server listening on port ${config.https.port}`);
+        });
+    }
 
-    logger.info(`Server started on port 3000`);
+
+    logger.info(`Server started on port 5000`);
 }
+
 
 main();
