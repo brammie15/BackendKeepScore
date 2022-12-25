@@ -25,7 +25,7 @@ const {tables} = require("../data");
 
 exports.seed = async function(knex) {
   // Deletes ALL existing entries
-  await knex(tables.leerling).del()
+  await knex(tables.leerling).truncate()
   await knex(tables.leerling).insert([
     {naam: 'Cailliau', voornaam: 'Marie', klas_id: 1},
     {naam: 'De Buyser', voornaam: 'Beau', klas_id: 1},

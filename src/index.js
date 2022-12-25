@@ -12,8 +12,9 @@ const {
     initializeLogger
 } = require('./core/logging')
 const {initializeData} = require("../data");
+const Process = require("process");
 
-const isDevelopment = true;
+const isDevelopment = process.env.IS_DEV;
 
 const main = async () => {
     const NODE_ENV ='NODE_ENV';
@@ -68,13 +69,15 @@ const main = async () => {
         });
 
         //test if https works
-        axios.get("https://" + serverConfig.domain).then((res) => {
+        if(Process.env.SELF_CHECK){
+            axios.get("https://" + serverConfig.domain).then((res) => {
             if(res.status === 200){
                 logger.info('HTTPS works');
             }else{
                 logger.error('HTTPS does not work');
             }
-        });
+            });
+        }
     }
 
     if(isDevelopment){
