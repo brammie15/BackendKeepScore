@@ -26,6 +26,7 @@ const main = async () => {
             NODE_ENV
         }
     });
+    let serverConfig = {};
     if(!isDevelopment){
         const serverConfig = {
             domain: 'brammie15.dev', // your domain
