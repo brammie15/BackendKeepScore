@@ -30,7 +30,7 @@ const main = async () => {
     });
     let serverConfig = {};
     if(!isDevelopment){
-        const serverConfig = {
+        serverConfig = {
             domain: 'brammie15.dev', // your domain
             https: {
                 port: 443, // any port that is open and not already used on your server
@@ -47,7 +47,7 @@ const main = async () => {
     const app = new Koa();
     // app.use(cors())
     const logger = getLogger();
-
+    logger.info("Running in " + (isDevelopment ? "development" : "production") + " mode");
 
     app.use(bodyParser());
 
